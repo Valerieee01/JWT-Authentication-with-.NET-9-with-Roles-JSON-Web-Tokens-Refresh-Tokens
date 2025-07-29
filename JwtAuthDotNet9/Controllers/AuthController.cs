@@ -45,7 +45,7 @@ namespace JwtAuthDotNet9.Controllers
                 return BadRequest("Wrong Password.");
             }
 
-            string token = "suscces";
+            string token = CreateToken(user);
 
             return Ok(token);
         }
