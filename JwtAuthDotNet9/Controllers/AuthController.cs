@@ -4,13 +4,17 @@ using Microsoft.AspNetCore.Mvc;
 using JwtAuthDotNet9.Entities;
 using System.Security.Claims;
 using System.Security.Cryptography;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using Microsoft.Extensions.Configuration;
+using System.IdentityModel.Tokens.Jwt;
 
 
 namespace JwtAuthDotNet9.Controllers
 {
     [Route("api/[controller]")]
     [ApiController] 
-    public class AuthController : ControllerBase
+    public class AuthController(IConfiguration configuration) : ControllerBase
     {
 
         public static User user = new();
@@ -53,7 +57,19 @@ namespace JwtAuthDotNet9.Controllers
                 new Claim(ClaimTypes.Name, user.Username)
             };
 
-            var key  = new SymmetricSecurityKey()
+            var key = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(configuration.GetValue<string>("AppSettings:Token")!));
+
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512);
+
+            var tokenDescriptor = new JwtSecurityToken(
+                issuer: configuration.GetValue<string>("AppSetting:Issuer"),
+                audience: configuration.GetValue<string>("AppSetting:Audience"), 
+                claims: claims,
+                expires:DateTime.UtcNow.AddDays(1),
+                signingCredentials: creds
+                );
+            return new JwtSecurityTokenHandler().WriteToken(tokenDescriptor);
         }
     }
 }
