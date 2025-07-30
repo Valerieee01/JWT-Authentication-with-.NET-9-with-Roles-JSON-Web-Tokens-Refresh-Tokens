@@ -12,7 +12,7 @@ namespace JwtAuthDotNet9.Services
 {
     public class AuthService(UserDbContext context, IConfiguration configuration) : IAuthService
     {
-        public async Task<User?> LoginAsync(UserDTOs request)
+        public async Task<string?> LoginAsync(UserDTOs request)
         {
             var user = await context.Users.FirstOrDefaultAsync(o => o.Username == request.Username);
             if (user is null)
@@ -75,5 +75,6 @@ namespace JwtAuthDotNet9.Services
 
             return new JwtSecurityTokenHandler().WriteToken(tokenDescriptor);
         }
+
     }
 }

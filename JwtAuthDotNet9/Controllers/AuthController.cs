@@ -9,6 +9,7 @@ using System.Text;
 using Microsoft.Extensions.Configuration;
 using System.IdentityModel.Tokens.Jwt;
 using JwtAuthDotNet9.Services;
+using Microsoft.AspNetCore.Authorization;
 
 
 namespace JwtAuthDotNet9.Controllers
@@ -38,6 +39,13 @@ namespace JwtAuthDotNet9.Controllers
                 return BadRequest("Credenciales invalidas");
             }
             return Ok(token);
+        }
+
+        [Authorize]
+        [HttpGet]
+        public IActionResult AuthenticatedOnlyEndpoint()
+        {
+            return Ok("Estas autenticado");
         }
 
        

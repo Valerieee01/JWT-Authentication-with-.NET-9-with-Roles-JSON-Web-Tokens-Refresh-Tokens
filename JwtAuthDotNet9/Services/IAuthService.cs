@@ -7,7 +7,7 @@ namespace JwtAuthDotNet9.Services
     {
 
         Task<User?> RegisterAsync(UserDTOs request);
-        Task<User?> LoginAsync(UserDTOs request);
+        Task<string?> LoginAsync(UserDTOs request);
 
     }
 }
